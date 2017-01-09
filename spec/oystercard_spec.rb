@@ -40,4 +40,26 @@ describe OysterCard do
       end
     end
   end
+  describe '.in_journey?' do
+    it "is initially not in journey" do
+      expect(subject).not_to be_in_journey
+    end
+  end
+  describe '.touch_in' do
+    context 'when starting a journey' do
+      it "changes the state of in_journey? to true" do
+        subject.touch_in
+        expect(subject).to be_in_journey
+      end
+    end
+  end
+  describe '.touch_out' do
+    context 'when finishing a journey' do
+      it "changes the state of in_journey? to false" do
+        subject.touch_in
+        subject.touch_out
+        expect(subject).not_to be_in_journey
+      end
+    end
+  end
 end
