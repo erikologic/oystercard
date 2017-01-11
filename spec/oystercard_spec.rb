@@ -71,10 +71,9 @@ describe OysterCard do
           min_fare = described_class::MIN_FARE
           oystercard.top_up(min_fare + 1)
           oystercard.touch_in
-          oystercard.touch_out
       end
       it "changes the state of in_journey? to false" do
-        expect(oystercard).not_to be_in_journey
+        expect{oystercard.touch_out}.to change{oystercard.in_journey?}.from(true).to(false)
       end
     end
   end
