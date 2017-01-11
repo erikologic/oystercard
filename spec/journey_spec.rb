@@ -2,12 +2,30 @@ require 'journey'
 
 describe Journey do
 
-  subject(:journey) { described_class.new }
+  let(:start_station){double("Station")}
+  let(:end_station){double("Station")}
 
-  it {is_expected.to respond_to(:start)}
-  it {is_expected.to respond_to(:finish)}
+  subject(:journey) { described_class.new(start_station) }
+
+  it {is_expected.to respond_to(:start_station)}
+  it {is_expected.to respond_to(:end_station)}
   it {is_expected.to respond_to(:fare)}
   it {is_expected.to respond_to(:complete?)}
 
-
+  context 'when journey start' do
+    it 'stores a start station' do
+      expect(journey.start_station).to eq(start_station)
+    end
+    context 'and it ends' do
+      before do
+        journey.end_station = end_station
+      end
+      it 'stores the end station' do
+        expect(journey.end_station).to eq(end_station)
+      end
+      it 'calculates fare' do
+        expect(journey.fare).to eq(1)        
+      end
+    end
+  end
 end
