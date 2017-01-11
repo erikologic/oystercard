@@ -1,10 +1,11 @@
 class OysterCard
-  attr_reader :balance, :entry_station
+  attr_reader :balance, :entry_station, :journeys
   MAX_CAPACITY = 90
   MIN_FARE = 1
 
   def initialize
     @balance = 0
+    @journeys = []
   end
 
   def top_up(value)
@@ -13,7 +14,7 @@ class OysterCard
   end
 
   def in_journey?
-    @entry_station ? true : false
+    !!@entry_station
   end
 
   def touch_in(station)

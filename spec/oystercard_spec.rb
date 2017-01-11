@@ -8,11 +8,15 @@ describe OysterCard do
   #    @station = double("Station")
   #  end
 
-   let(:station) {double("Station")}
+  let(:station) {double("Station")}
+  it { is_expected.to respond_to(:journeys)}
 
   context "when initialized" do
     it "has a balance" do
       expect(oystercard.balance).to eq 0
+    end
+    it "journeys is an empty array" do
+      expect(oystercard.journeys).to eq([])
     end
   end
 
@@ -77,7 +81,7 @@ describe OysterCard do
         expect{oystercard.touch_in(station)}.to change{oystercard.in_journey?}.from(false).to(true)
       end
     end
-    context 'when minimum balance is below the minimum fare' do
+    context 'when minimum balance is below the minimum farew' do
       it 'raise a "Not enough balance" error' do
         expect{oystercard.touch_in(station)}.to raise_error("Not enough balance")
       end
