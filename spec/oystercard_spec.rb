@@ -30,6 +30,7 @@ describe OysterCard do
       end
     end
   end
+=begin
   describe '.deduct(amount)' do
     context 'when there is enough balance' do
       before do
@@ -43,6 +44,8 @@ describe OysterCard do
       end
     end
   end
+=end
+
   describe '.in_journey?' do
     it "is initially not in journey" do
       expect(oystercard).not_to be_in_journey
@@ -66,14 +69,18 @@ describe OysterCard do
     end
   end
   describe '.touch_out' do
+    before do
+        @min_fare = described_class::MIN_FARE
+        oystercard.top_up(@min_fare * 2)
+        oystercard.touch_in
+    end
     context 'when finishing a journey' do
-      before do
-          min_fare = described_class::MIN_FARE
-          oystercard.top_up(min_fare + 1)
-          oystercard.touch_in
-      end
+
       it "changes the state of in_journey? to false" do
         expect{oystercard.touch_out}.to change{oystercard.in_journey?}.from(true).to(false)
+      end
+      it "reduces the balance by minimum fare" do
+        expect{oystercard.touch_out}.to change{oystercard.balance}.by(-@min_fare)
       end
     end
   end
