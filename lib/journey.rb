@@ -1,5 +1,5 @@
 class Journey
-  attr_reader :start_station
+  attr_reader :start_station, :fare
   attr_accessor :end_station
 
   def initialize(start_station)
@@ -7,7 +7,7 @@ class Journey
   end
 
   def calc_fare
-    fare = (!!start_station and !!end_station) ? 1 : 6
+    @fare = !!(start_station and end_station) ? 1 : 6
   end
 
   def complete?

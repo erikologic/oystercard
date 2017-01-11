@@ -24,7 +24,24 @@ describe Journey do
         expect(journey.end_station).to eq(end_station)
       end
       it 'calculates fare' do
-        expect(journey.fare).to eq(1)        
+        expect{journey.calc_fare}.to change{journey.fare}.to(1)
+      end
+    end
+    context 'and it doesn\'t end' do
+      xit "calculates a fare with a penalty" do
+        expect{journey.calc_fare}.to change(journey.fare).to(6)
+      end
+    end
+  end
+  context 'when a journey doesn\'t start' do
+    context 'and it ends' do
+      xit "calculates a fare with a penalty" do
+        expect{journey.calc_fare}.to change(journey.fare).to(6)
+      end
+    end
+    context 'and it doesn\'t end' do
+      it '?????????????' do
+
       end
     end
   end
