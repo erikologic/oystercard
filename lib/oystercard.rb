@@ -17,12 +17,13 @@ class OysterCard
     !!@entry_station
   end
 
-  def touch_in(station)
+  def touch_in(entry_station)
     raise("Not enough balance") if @balance < MIN_FARE
-    @entry_station = station
+    @entry_station = entry_station
   end
 
-  def touch_out
+  def touch_out(exit_station)
+    journeys << {start_station: @entry_station, end_station: exit_station}
     deduct(MIN_FARE)
     @entry_station = nil
   end

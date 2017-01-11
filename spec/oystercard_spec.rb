@@ -9,15 +9,31 @@ describe OysterCard do
   #  end
 
   let(:station) {double("Station")}
+  let(:station_2) {double("Station")}
   it { is_expected.to respond_to(:journeys)}
 
-  context "when initialized" do
+  describe "#initialized" do
     it "has a balance" do
       expect(oystercard.balance).to eq 0
     end
     it "journeys is an empty array" do
       expect(oystercard.journeys).to eq([])
     end
+  end
+
+  describe "#journeys" do
+    context "after a journey"
+      before do
+        oystercard.top_up(described_class::MAX_CAPACITY)
+        oystercard.touch_in(station)
+        oystercard.touch_out(station_2)
+        @journeys_array = [{start_station: station, end_station: station_2}]
+      end
+      it "returns the journey" do
+        expect(oystercard.journeys).to eq(@journeys_array)
+      end
+
+
   end
 
   describe "#entry_station" do
@@ -95,15 +111,17 @@ describe OysterCard do
         oystercard.touch_in(station)
     end
     context 'when finishing a journey' do
+      it { is_expected.to respond_to(:touch_out).with(1).argument}
       it "changes the state of in_journey? to false" do
-        expect{oystercard.touch_out}.to change{oystercard.in_journey?}.from(true).to(false)
+        expect{oystercard.touch_out(station_2)}.to change{oystercard.in_journey?}.from(true).to(false)
       end
       it "reduces the balance by minimum fare" do
-        expect{oystercard.touch_out}.to change{oystercard.balance}.by(-@min_fare)
+        expect{oystercard.touch_out(station_2)}.to change{oystercard.balance}.by(-@min_fare)
       end
       it " resets the entry station to nil" do
-        expect{oystercard.touch_out}.to change{oystercard.entry_station}.to(nil)
+        expect{oystercard.touch_out(station_2)}.to change{oystercard.entry_station}.to(nil)
       end
     end
+
   end
 end
