@@ -19,12 +19,10 @@ class OysterCard
   def touch_in(station)
     raise("Not enough balance") if @balance < MIN_FARE
     @entry_station = station
-    @in_journey = true
   end
 
   def touch_out
     deduct(MIN_FARE)
-    @in_journey = false
     @entry_station = nil
   end
 

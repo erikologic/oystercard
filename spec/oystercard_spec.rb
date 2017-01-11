@@ -40,6 +40,7 @@ describe OysterCard do
       end
     end
   end
+
 =begin
   describe '#deduct(amount)' do
     context 'when there is enough balance' do
@@ -61,6 +62,7 @@ describe OysterCard do
       expect(oystercard).not_to be_in_journey
     end
   end
+
   describe '#touch_in(station)' do
     it { is_expected.to respond_to(:touch_in).with(1).argument}
     context 'when minimum balance is above the minimum fare' do
@@ -81,6 +83,7 @@ describe OysterCard do
       end
     end
   end
+
   describe '#touch_out' do
     before do
         @min_fare = described_class::MIN_FARE
@@ -88,7 +91,6 @@ describe OysterCard do
         oystercard.touch_in(station)
     end
     context 'when finishing a journey' do
-
       it "changes the state of in_journey? to false" do
         expect{oystercard.touch_out}.to change{oystercard.in_journey?}.from(true).to(false)
       end
