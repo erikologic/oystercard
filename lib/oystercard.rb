@@ -17,7 +17,7 @@ class OysterCard
     @in_journey
   end
 
-  def touch_in
+  def touch_in(station)
     raise("Not enough balance") if @balance < MIN_FARE
     @in_journey = true
   end
@@ -32,5 +32,5 @@ class OysterCard
   def deduct(value)
     @balance -= value
   end
-  
+
 end
