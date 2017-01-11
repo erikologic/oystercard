@@ -4,17 +4,22 @@ require "pry"
 describe OysterCard do
   subject(:oystercard) { described_class.new }
 
-  # before do
-  #   station = double("Station")
-  # end
+  #  before do
+  #    @station = double("Station")
+  #  end
 
-  let(:station) {double}
+   let(:station) {double("Station")}
 
   context "when initialized" do
     it "has a balance" do
       expect(oystercard.balance).to eq 0
     end
   end
+
+  describe "#entry_station" do
+    it {is_expected.to respond_to(:entry_station)}
+  end
+
   describe '#top_up(amount)' do
     context "when adding money" do
       before do
@@ -31,7 +36,7 @@ describe OysterCard do
         oystercard.top_up(@max_capacity)
       end
       it "raises 'Maximum limit reached' error" do
-        expect{oystercard.top_up(rand(10))}.to raise_error("Maximum limit of #{@max_capacity} reached")
+        expect{oystercard.top_up(rand(10)+1)}.to raise_error("Maximum limit of #{@max_capacity} reached")
       end
     end
   end
@@ -50,7 +55,7 @@ describe OysterCard do
     end
   end
 =end
-  describe
+
   describe '#in_journey?' do
     it "is initially not in journey" do
       expect(oystercard).not_to be_in_journey
@@ -63,13 +68,16 @@ describe OysterCard do
         min_fare = described_class::MIN_FARE
         oystercard.top_up(min_fare + 1)
       end
-      xit "changes the state of in_journey? to true" do
-        expect{oystercard.touch_in}.to change{oystercard.in_journey?}.from(false).to(true)
+      it "stores the entry station" do
+        expect{oystercard.touch_in(station)}.to change{oystercard.entry_station}.to(station)
+      end
+      it "changes the state of in_journey? to true" do
+        expect{oystercard.touch_in(station)}.to change{oystercard.in_journey?}.from(false).to(true)
       end
     end
     context 'when minimum balance is below the minimum fare' do
-      xit 'raise a "Not enough balance" error' do
-        expect{oystercard.touch_in}.to raise_error("Not enough balance")
+      it 'raise a "Not enough balance" error' do
+        expect{oystercard.touch_in(station)}.to raise_error("Not enough balance")
       end
     end
   end
@@ -77,15 +85,18 @@ describe OysterCard do
     before do
         @min_fare = described_class::MIN_FARE
         oystercard.top_up(@min_fare * 2)
-        oystercard.touch_in
+        oystercard.touch_in(station)
     end
     context 'when finishing a journey' do
 
-      xit "changes the state of in_journey? to false" do
+      it "changes the state of in_journey? to false" do
         expect{oystercard.touch_out}.to change{oystercard.in_journey?}.from(true).to(false)
       end
-      xit "reduces the balance by minimum fare" do
+      it "reduces the balance by minimum fare" do
         expect{oystercard.touch_out}.to change{oystercard.balance}.by(-@min_fare)
+      end
+      it " resets the entry station to nil" do
+        expect{oystercard.touch_out}.to change{oystercard.entry_station}.to(nil)
       end
     end
   end
