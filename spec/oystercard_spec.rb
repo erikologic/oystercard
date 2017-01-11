@@ -2,28 +2,31 @@ require "oystercard"
 require "pry"
 
 describe OysterCard do
+
+  subject(:oystercard) { described_class.new }
+
   context "when initialized" do
     it "has a balance" do
-      expect(subject.balance).to eq 0
+      expect(oystercard.balance).to eq 0
     end
   end
   describe ".top_up(amount)" do
     context "when adding money" do
       before do
         @top_up = rand(50)
-        subject.top_up(@top_up)
+        oystercard.top_up(@top_up)
       end
       it "can have balance increase" do
-        expect(subject.balance).to eq @top_up
+        expect(oystercard.balance).to eq @top_up
       end
     end
     context "when exceeding maximum limit" do
       before do
         @max_capacity = OysterCard::MAX_CAPACITY
-        subject.top_up(@max_capacity)
+        oystercard.top_up(@max_capacity)
       end
       it "raises 'Maximum limit reached' error" do
-        expect{subject.top_up(rand(10))}.to raise_error("Maximum limit of #{@max_capacity} reached")
+        expect{oystercard.top_up(rand(10))}.to raise_error("Maximum limit of #{@max_capacity} reached")
       end
     end
   end
@@ -31,34 +34,47 @@ describe OysterCard do
     context 'when there is enough balance' do
       before do
         @top_up = rand(50)
-        subject.top_up(@top_up)
+        oystercard.top_up(@top_up)
         @fare = rand(5)
-        subject.deduct(@fare)
+        oystercard.deduct(@fare)
       end
       it "can have balance decreased" do
-        expect(subject.balance).to eq (@top_up - @fare)
+        expect(oystercard.balance).to eq (@top_up - @fare)
       end
     end
   end
   describe '.in_journey?' do
     it "is initially not in journey" do
-      expect(subject).not_to be_in_journey
+      expect(oystercard).not_to be_in_journey
     end
   end
   describe '.touch_in' do
-    context 'when starting a journey' do
+    context 'when minimum balance is above the minimum fare' do
+      before do
+        min_fare = described_class::MIN_FARE
+        oystercard.top_up(min_fare + 1)
+        oystercard.touch_in
+      end
       it "changes the state of in_journey? to true" do
-        subject.touch_in
-        expect(subject).to be_in_journey
+        expect(oystercard).to be_in_journey
+      end
+    end
+    context 'when minimum balance is below the minimum fare' do
+      it 'raise a "Not enough balance" error' do
+        expect{oystercard.touch_in}.to raise_error("Not enough balance")
       end
     end
   end
   describe '.touch_out' do
     context 'when finishing a journey' do
+      before do
+          min_fare = described_class::MIN_FARE
+          oystercard.top_up(min_fare + 1)
+          oystercard.touch_in
+          oystercard.touch_out
+      end
       it "changes the state of in_journey? to false" do
-        subject.touch_in
-        subject.touch_out
-        expect(subject).not_to be_in_journey
+        expect(oystercard).not_to be_in_journey
       end
     end
   end
